@@ -29,8 +29,15 @@ function plugin (Vue, options = {}) {
     options.public_dsn = options.dsn.replace(/:\w+@/, '@')
   }
 
-  // install raven
-  Raven.config(_options.dsn, _options.config).addPlugin(RavenVue, Vue).install()
+  // config raven
+  Raven.config(_options.dsn, _options.config)
+
+  if (!_options.disableAutomaticallyReport) {
+    Raven.addPlugin(RavenVue, Vue)
+  }
+
+  // install Raven
+  Raven.install()
 
   // add raven instance
   Vue.prototype.$raven = Raven
