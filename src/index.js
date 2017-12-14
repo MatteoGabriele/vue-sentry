@@ -4,7 +4,7 @@ import RavenVue from 'raven-js/plugins/vue'
 function plugin (Vue, options = {}) {
   // Merge options
   const _options = Object.assign({
-    disableAutomaticallyReport: options.disableAutomaticallyReport || false,
+    disableAutoReport: options.disableAutoReport || false,
     dsn: options.dsn || null,
     public_dsn: options.public_dsn || null,
     public_key: options.public_key || null,
@@ -32,7 +32,7 @@ function plugin (Vue, options = {}) {
   // config raven
   Raven.config(_options.dsn, _options.config)
 
-  if (!_options.disableAutomaticallyReport) {
+  if (!_options.disableAutoReport) {
     Raven.addPlugin(RavenVue, Vue)
   }
 
