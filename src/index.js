@@ -1,6 +1,5 @@
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
-import { formatComponentName } from './utils'
 
 function plugin (Vue, options = {}) {
   // Merge options
@@ -32,30 +31,6 @@ function plugin (Vue, options = {}) {
 
   // install raven
   Raven.config(_options.dsn, _options.config).addPlugin(RavenVue, Vue).install()
-
-  // custom error handler
-  const _oldOnError = Vue.config.errorHandler
-  Vue.config.errorHandler = function VueErrorHandler (error, vm, info) {
-    const metaData = {}
-
-    // vm and lifecycleHook are not always available
-    if (Object.prototype.toString.call(vm) === '[object Object]') {
-      metaData.componentName = formatComponentName(vm)
-      metaData.propsData = vm.$options.propsData
-    }
-
-    if (typeof info !== 'undefined') {
-      metaData.lifecycleHook = info
-    }
-
-    Raven.captureException(error, {
-      extra: metaData
-    })
-
-    if (typeof _oldOnError === 'function') {
-      _oldOnError.call(this, error, vm, info)
-    }
-  }
 
   // add raven instance
   Vue.prototype.$raven = Raven
